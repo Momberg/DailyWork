@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         ItemClickSupport.addTo(rvTarefas).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                nome = (TextView) v.findViewById(R.id.tvNome);
+                nome = (TextView) v.findViewById(R.id.id);
                 Toast.makeText(getApplicationContext(), nome.getText(), Toast.LENGTH_SHORT).show();
             }
         });

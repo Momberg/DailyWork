@@ -42,6 +42,7 @@ public class ListaAndroidAdaper extends RecyclerView.Adapter<RecyclerView.ViewHo
         androidItemHolder.tvNome.setText(tarefas.get(position).getNome());
         androidItemHolder.tvTarefa.setText(tarefas.get(position).getTipo().getNome());
         androidItemHolder.tvData.setText(String.valueOf(tarefas.get(position).getData()));
+        androidItemHolder.id.setText(String.valueOf(tarefas.get(position).getId()));
 
     }
 
@@ -52,11 +53,12 @@ public class ListaAndroidAdaper extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private class AndroidItemHolder extends RecyclerView.ViewHolder{
 
-        TextView tvNome, tvTarefa, tvData;
+        TextView tvNome, tvTarefa, tvData, id;
 
         public AndroidItemHolder(View itemView) {
             super(itemView);
 
+            id = (TextView) itemView.findViewById(R.id.id);
             tvNome = (TextView) itemView.findViewById(R.id.tvNome);
             tvTarefa = (TextView) itemView.findViewById(R.id.tvTarefa);
             tvData = (TextView) itemView.findViewById(R.id.tvData);
