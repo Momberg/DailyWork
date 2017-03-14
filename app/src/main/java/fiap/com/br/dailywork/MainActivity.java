@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
 
     private RecyclerView rvTarefas;
     private ListaAndroidAdaper adapter;
+    private TextView nome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,8 @@ public class MainActivity extends AppCompatActivity
         ItemClickSupport.addTo(rvTarefas).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Toast.makeText(getApplicationContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
+                nome = (TextView) v.findViewById(R.id.tvNome);
+                Toast.makeText(getApplicationContext(), nome.getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }

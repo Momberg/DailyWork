@@ -55,8 +55,8 @@ public class TarefaDAO {
                 TarefaDAO.TABELA_TAREFA + " t INNER JOIN " +
                 Tipo_TarefaDAO.TABELA_TAREFA_TIPO
                 + " c ON t." + TarefaDAO.COLUNA_TAREFA_TIPO_ID + " = c." +
-                Tipo_TarefaDAO.COLUNA_ID +
-                " ORDER BY " + TarefaDAO.COLUNA_NOME + " ASC";
+                Tipo_TarefaDAO.COLUNA_ID; /*+
+                " ORDER BY " + TarefaDAO.COLUNA_NOME + " ASC";*/
         SQLiteDatabase db = banco.getReadableDatabase();
         Cursor cursor = db.rawQuery(rawQuery, null);
         Tarefa tarefa = null;
