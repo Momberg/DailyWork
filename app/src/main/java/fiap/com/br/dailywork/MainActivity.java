@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rvTarefas = (RecyclerView) findViewById(R.id.rvTarefas);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        temp_id = "";
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 id = (TextView) v.findViewById(R.id.id);
-                if(v.isSelected() && temp_id.equals(id.getText().toString())){
+                if(v.isSelected()){
                     v.setSelected(false);
                     temp_id = "";
                 } else {
