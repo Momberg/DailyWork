@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity
 
     private RecyclerView rvTarefas;
     private ListaAndroidAdaper adapter;
-    private TextView nome;
+    private TextView id;
+    private String temp_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         rvTarefas = (RecyclerView) findViewById(R.id.rvTarefas);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +59,14 @@ public class MainActivity extends AppCompatActivity
         ItemClickSupport.addTo(rvTarefas).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                nome = (TextView) v.findViewById(R.id.id);
-                Toast.makeText(getApplicationContext(), nome.getText(), Toast.LENGTH_SHORT).show();
+                id = (TextView) v.findViewById(R.id.id);
+                if(v.isSelected() && temp_id.equals(id.getText().toString())){
+                    v.setSelected(false);
+                    temp_id = "";
+                } else {
+                    v.setSelected(true);
+                    temp_id = id.getText().toString();
+                }
             }
         });
     }
@@ -133,4 +139,5 @@ public class MainActivity extends AppCompatActivity
         rvTarefas.setLayoutManager(new LinearLayoutManager(this));
         rvTarefas.setAdapter(adapter);
     }
+
 }
