@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         rvTarefas = (RecyclerView) findViewById(R.id.rvTarefas);
         temp_id = "";
+        final FloatingActionButton fabDel = (FloatingActionButton) findViewById(R.id.fabDel);
+        final FloatingActionButton fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,12 +64,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 id = (TextView) v.findViewById(R.id.id);
-                if(v.isSelected()){
-                    v.setSelected(false);
-                    temp_id = "";
-                } else {
+                int i = countItemSelected();
+                if(!isItemSelected() && i == 0){
                     v.setSelected(true);
                     temp_id = id.getText().toString();
+                    fabDel.setVisibility(View.VISIBLE);
+                    fabEdit.setVisibility(View.VISIBLE);
+                } else {
+                    v.setSelected(false);
+                    temp_id = "";
+                    fabDel.setVisibility(View.INVISIBLE);
+                    fabEdit.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -139,6 +147,25 @@ public class MainActivity extends AppCompatActivity
         adapter = new ListaAndroidAdaper(this, lista);
         rvTarefas.setLayoutManager(new LinearLayoutManager(this));
         rvTarefas.setAdapter(adapter);
+    }
+
+    private boolean isItemSelected(){
+        for (int i = 0; i < rvTarefas.getAdapter().getItemCount(); i++) {
+            if(rvTarefas.getChildAt(i).isSelected()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int countItemSelected(){
+        int s = 0;
+        for (int i = 0; i < rvTarefas.getAdapter().getItemCount(); i++) {
+            if(rvTarefas.getChildAt(i).isSelected()){
+                s =+ 1;
+            }
+        }
+        return s;
     }
 
 }
