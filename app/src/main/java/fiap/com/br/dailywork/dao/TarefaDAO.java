@@ -73,5 +73,9 @@ public class TarefaDAO {
         return tarefas;
     }
 
+    public void deleteByID(int id) {
+        SQLiteDatabase db = banco.getReadableDatabase();
+        db.delete(TarefaDAO.TABELA_TAREFA, "id = " + id, null);
+    }
 
 }

@@ -30,15 +30,17 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView rvTarefas;
     private ListaAndroidAdaper adapter;
     private TextView id;
-    private String temp_id;
+    private int temp_id;
+    private TarefaDAO tarefaDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tarefaDAO = new TarefaDAO(this.getApplicationContext());
+        temp_id = -1;
         rvTarefas = (RecyclerView) findViewById(R.id.rvTarefas);
-        temp_id = "";
         final FloatingActionButton fabDel = (FloatingActionButton) findViewById(R.id.fabDel);
         final FloatingActionButton fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -48,6 +50,18 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(new Intent(MainActivity.this,
                             NovaTarefa.class),
                     NovaTarefa.CODE_NOVA_TAREFA);
+            }
+        });
+
+        fabDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(temp_id != -1){
+                    tarefaDAO.deleteByID(temp_id);
+                    carregaTarefas();
+                    fabDel.setVisibility(View.INVISIBLE);
+                    fabEdit.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -67,17 +81,18 @@ public class MainActivity extends AppCompatActivity
                 int i = countItemSelected();
                 if(!isItemSelected() && i == 0){
                     v.setSelected(true);
-                    temp_id = id.getText().toString();
+                    temp_id = Integer.parseInt(id.getText().toString());
                     fabDel.setVisibility(View.VISIBLE);
                     fabEdit.setVisibility(View.VISIBLE);
-                } else {
+                } else if(v.isSelected()){
                     v.setSelected(false);
-                    temp_id = "";
+                    temp_id = -1;
                     fabDel.setVisibility(View.INVISIBLE);
                     fabEdit.setVisibility(View.INVISIBLE);
                 }
             }
         });
+
     }
 
     @Override
