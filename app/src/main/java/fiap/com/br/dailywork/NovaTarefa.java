@@ -1,6 +1,8 @@
 package fiap.com.br.dailywork;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,19 +25,26 @@ import fiap.com.br.dailywork.model.Tipo_Tarefa;
 public class NovaTarefa extends AppCompatActivity {
 
     public final static int CODE_NOVA_TAREFA = 666;
+    public final static int CODE_EDITA_TAREFA = 333;
     private TextInputLayout tilNomeTarefa;
+    private TextView txNomeTarefa;
     private Spinner spTarefa;
     private List<Tipo_Tarefa> tarefas;
     private CalendarView cvData;
     private String data;
+    private SharedPreferences id_tarefa;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nova_tarefa);
         tilNomeTarefa = (TextInputLayout) findViewById(R.id.tilNomeTarefa);
+        txNomeTarefa = (TextView) findViewById(R.id.txNomeTarefa);
         spTarefa = (Spinner) findViewById(R.id.spTarefa);
         cvData = (CalendarView) findViewById(R.id.cvData);
+        id_tarefa = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        id = id_tarefa.getInt("ID",0);
         Tipo_TarefaDAO Tipo_TarefaDAO = new Tipo_TarefaDAO(this);
         tarefas = Tipo_TarefaDAO.getAll();
         ArrayAdapter<Tipo_Tarefa> adapter =
@@ -50,6 +60,9 @@ public class NovaTarefa extends AppCompatActivity {
                 data = dayOfMonth + "/" + month + "/" + year;
             }
         });
+        if(id != 0){
+            editar();
+        }
     }
 
     public void cadastrar(View v) {
@@ -58,8 +71,15 @@ public class NovaTarefa extends AppCompatActivity {
         tarefa.setNome(String.valueOf(tilNomeTarefa.getEditText().getText()));
         tarefa.setTipo((Tipo_Tarefa) spTarefa.getSelectedItem());
         tarefa.setData(data);
-        tarefaDAO.add(tarefa);
-        retornaParaTelaAnterior();
+        tarefa.setId(id);
+        if(id == 0){
+            tarefaDAO.add(tarefa);
+            id_tarefa.edit().putInt("ID", 0).apply();
+            retornaParaTelaAnteriorPosEditar();
+        } else {
+            tarefaDAO.editByID(tarefa);
+            retornaParaTelaAnterior();
+        }
     }
 
     //retorna para tela de lista de tarefaes
@@ -67,5 +87,20 @@ public class NovaTarefa extends AppCompatActivity {
         Intent intentMessage = new Intent();
         setResult(CODE_NOVA_TAREFA, intentMessage);
         finish();
+    }
+
+    public void retornaParaTelaAnteriorPosEditar() {
+        Intent intentMessage = new Intent();
+        setResult(CODE_EDITA_TAREFA, intentMessage);
+        finish();
+    }
+
+    public void editar(){
+        TarefaDAO tarefaDAO = new TarefaDAO(this);
+        Tarefa tarefa;
+        tarefa = tarefaDAO.getByID(id);
+        txNomeTarefa.setText(String.valueOf(tarefa.getNome()));
+        spTarefa.setSelection(tarefa.getTipo().getId() - 1);
+        id_tarefa.edit().putInt("ID", 0).apply();
     }
 }

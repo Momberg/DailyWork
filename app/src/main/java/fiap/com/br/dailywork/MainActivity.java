@@ -1,7 +1,9 @@
 package fiap.com.br.dailywork;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +34,10 @@ public class MainActivity extends AppCompatActivity
     private TextView id;
     private int temp_id;
     private TarefaDAO tarefaDAO;
+    private SharedPreferences id_tarefa;
+    private FloatingActionButton fabDel;
+    private FloatingActionButton fabEdit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,17 +45,19 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tarefaDAO = new TarefaDAO(this.getApplicationContext());
+        id_tarefa = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         temp_id = -1;
         rvTarefas = (RecyclerView) findViewById(R.id.rvTarefas);
-        final FloatingActionButton fabDel = (FloatingActionButton) findViewById(R.id.fabDel);
-        final FloatingActionButton fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
+        fabDel = (FloatingActionButton) findViewById(R.id.fabDel);
+        fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            startActivityForResult(new Intent(MainActivity.this,
-                            NovaTarefa.class),
-                    NovaTarefa.CODE_NOVA_TAREFA);
+                id_tarefa.edit().putInt("ID", 0).apply();
+                startActivityForResult(new Intent(MainActivity.this,
+                                NovaTarefa.class),
+                     NovaTarefa.CODE_NOVA_TAREFA);
             }
         });
 
@@ -61,6 +69,18 @@ public class MainActivity extends AppCompatActivity
                     carregaTarefas();
                     fabDel.setVisibility(View.INVISIBLE);
                     fabEdit.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        fabEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(temp_id != -1){
+                    id_tarefa.edit().putInt("ID", temp_id).apply();
+                    startActivityForResult(new Intent(MainActivity.this,
+                                    NovaTarefa.class),
+                            NovaTarefa.CODE_EDITA_TAREFA);
                 }
             }
         });
@@ -148,6 +168,12 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "Cancelado",
                     Toast.LENGTH_LONG).show();
         } else if (requestCode == NovaTarefa.CODE_NOVA_TAREFA) {
+            fabDel.setVisibility(View.INVISIBLE);
+            fabEdit.setVisibility(View.INVISIBLE);
+            carregaTarefas();
+        } else if (requestCode == NovaTarefa.CODE_EDITA_TAREFA) {
+            fabDel.setVisibility(View.INVISIBLE);
+            fabEdit.setVisibility(View.INVISIBLE);
             carregaTarefas();
         }
     }
