@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class NovaTarefa extends AppCompatActivity {
                         R.layout.tarefa_spinner_item, tarefas);
         adapter.setDropDownViewResource(R.layout.tarefa_spinner_item);
         spTarefa.setAdapter(adapter);
+        Calendar c = Calendar.getInstance();
+        data = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
         cvData.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
